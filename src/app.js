@@ -15,7 +15,7 @@ function validateId(req, res, next) {
   const { id } = req.params;
 
   if (!isUuid(id)) {
-    return res.status(401).json({ error: 'Id invalid' })
+    return res.status(400).json({ error: 'Id invalid' })
   }
 
   return next();
@@ -26,9 +26,9 @@ app.get("/repositories", (req, res) => {
 });
 
 app.post("/repositories", (req, res) => {
-  const { id = uuid(), title, url, techs, likes = 0 } = req.body;
+  const { title, url, techs } = req.body;
 
-  const data = { id, title, url, techs, likes };
+  const data = { id: uuid(), title, url, techs, likes: 0 };
   repositories.push(data);
 
   return res.json(data);
@@ -38,14 +38,15 @@ app.put("/repositories/:id", validateId, (req, res) => {
   const { id } = req.params;
   const { title, url, techs } = req.body;
 
-  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repository = repositories.find(repo => repo.id === id);
 
-  if (repositoryIndex < 0) {
+  if (!repository) {
     return res.status(400).json({ error: 'Repository not found' })
   }
 
-  const repository = { id, title, url, techs };
-  repositories[repositoryIndex] = repository;
+  repository.title = title || repository.title;
+  repository.url = url || repository.url;
+  repository.techs = techs || repository.techs;
 
   return res.json(repository);
 });
@@ -66,15 +67,13 @@ app.delete("/repositories/:id", (req, res) => {
 app.post("/repositories/:id/like", (req, res) => {
   const { id } = req.params;
 
-  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repository = repositories.find(repo => repo.id === id);
 
-  if (repositoryIndex < 0) {
+  if (!repository) {
     return res.status(400).json({ error: 'Repository not found' })
   }
 
-  const repository = repositories[repositoryIndex];
-  repository.likes = repository.likes + 1;
-
+  repository.likes += 1;
   return res.json(repository);
 });
 
