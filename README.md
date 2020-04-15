@@ -3,7 +3,7 @@
 > Este é um projeto para fins educativo da biblioteca Nodejs com Express.
 
 <div align="center">
-  <img  width="350" height="250" src="https://miro.medium.com/max/730/1*Jr3NFSKTfQWRUyjblBSKeg.png" width="350" alt="Node">
+  <img  width="250" height="250" src="https://miro.medium.com/max/730/1*Jr3NFSKTfQWRUyjblBSKeg.png" alt="Node">
 	<br>
 	<br>
 </div>
